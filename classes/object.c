@@ -1,13 +1,15 @@
 typedef struct {
 	short int id;
+	string name;
 	char symbol;
 	short int is_colide;
 	short int pollete_id;
 	void (*touch) (short int type);
 } object;
-object new_object(short int id, char sym, short int is_col, short int pollete_id) {
+object new_object(short int is_col, char* name, char sym, short int id, short int pollete_id) {
 	object new;
 	new.id = id;
+	new.name = init_new_string(name);
 	new.symbol = sym;
 	new.is_colide = is_col;
 	new.pollete_id = pollete_id;
@@ -31,7 +33,7 @@ typedef struct {
 	short int size;
 } objectLevel;
 
-#define airobj new_object(0, '.', 0, 0)
+#define airobj new_object(0, "", '.', 0, 0)
 objectLevel now_lvl;
 
 void new_object_level(objectLevel* lvl) {

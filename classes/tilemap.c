@@ -62,29 +62,48 @@ tileMapObject* move_cell(tileMapLayer* map, vec2 to, tileMapObject obj) {
 	}
 	return get_cell(map, obj.position);
 }
+int search_id(tileMapLayer* map, vec2 pos, short int id) {
+	for (int i = 0; i < map->size.z; i++) {
+		if (get_cell(map, vec2_to_vec3(pos, i))->id == id) {
+			return true;
+		}
+	}
+	return false;
+}
+int search_colide(tileMapLayer* map, vec2 pos) {
+	for (int i = 0; i < map->size.z; i++) {
+		if (get_by_id(now_lvl, get_cell(map, vec2_to_vec3(pos, i))->id).is_colide == 1) {
+			return true;
+		}
+	}
+	return false;
+}
 
-void read_layer(tileMapLayer rid, vec3 from, vec3 to) {
-	int scx, scy; getmaxyx(stdscr, scx, scy);
-	clear();
+void read_layer(tileMapLayer rid, vec3 from, vec3 to, WINDOW* win_to_pr) {
+	//wclear(win_to_pr);
 	vec3 real_size = vec3_minus(to, from);
 
-	move((scx / 2) - (real_size.x / 2), (scy / 2) - (real_size.y / 2));
 	int cnt = 0;
 	for (int i = from.x; i < to.x; i++) {
 		for (int j = from.y; j < to.y; j++) {
 			if (i >= 0 && j >= 0 && i < rid.size.x && j < rid.size.y) {
 				object obj = get_by_id(now_lvl, get_last_cell(rid, new_vec2(i, j))->id);
-				attron(COLOR_PAIR(obj.pollete_id));
-				addch(obj.symbol);
-				attroff(COLOR_PAIR(obj.pollete_id));
-				addch(' ');
+				wattron(win_to_pr, COLOR_PAIR(obj.pollete_id));
+				waddch(win_to_pr, obj.symbol);
+				wattroff(win_to_pr, COLOR_PAIR(obj.pollete_id));
+				waddch(win_to_pr, ' ');
 			}
 			else {
-				addch(' ');
-				addch(' ');
+				waddch(win_to_pr, ' ');
+				waddch(win_to_pr, ' ');
 			}
 		}
 		cnt++;
-		move(cnt + scx / 2 - real_size.x / 2, scy / 2 - real_size.y / 2);
+		wmove(win_to_pr, cnt, 1);
 	}
+	box(win_to_pr, 0, 0);
+	wmove(win_to_pr, 0, 2);
+	wprintw(win_to_pr, "ASCII WORLD 2");
+	wrefresh(win_to_pr);
+	//refresh();
 }

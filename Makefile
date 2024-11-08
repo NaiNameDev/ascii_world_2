@@ -1,5 +1,5 @@
 app.elf: main.c
-	gcc main.c -o app.elf -lncurses
+	gcc main.c -o app.elf -lpanel -lncurses
 
 .PHONY: ct c
 
